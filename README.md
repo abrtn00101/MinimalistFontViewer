@@ -11,3 +11,5 @@ Features to be implemented:
 * Fullscreen view
 * Font caching for fast and efficient rendering
 * Preview font on Material design action bar
+
+Note: This project is currently written in Java, but a migration to Kotlin is planned.
