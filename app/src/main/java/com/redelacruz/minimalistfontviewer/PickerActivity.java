@@ -12,41 +12,51 @@ import java.io.File;
 
 /**
  * An extension of NoNonsense-FilePicker (https://github.com/spacecowboy/NoNonsense-FilePicker)
- * that adds the ability to limit visible files by MIME type.
+ * that adds the ability to limit visible files by MIME type. Also adds the ability to limit access
+ * above the starting path.
  */
 public class PickerActivity extends FilePickerActivity {
 
     private static final String TAG = "PickerActivity";
 
     /**
-     * An String array of full or partial MIME types that will be visible in the picker.
+     * A String array of full or partial MIME types that will be visible in the picker.
      * Requires setType("&#42;&#47;&#42;").
      */
     public static final String EXTRA_MIME_TYPES =
-            "android.intent.extra" + "ADD_MIME_TYPE";
+            "android.intent.extra" + ".MIME_TYPES";
+    /**
+     * A boolean value that determines whether or not the picker will limit access above the
+     * starting path.
+     */
+    public static final String EXTRA_LIMIT_ROOT_TO_START =
+            "pickeractivity.intent" + ".LIMIT_ROOT_TO_START";
+    private String[] mimeTypes = {};
+    private boolean isLimitedToStart = false;
 
     PickerFragment currentFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
-        String[] mimeTypes = {};
 
-        if (intent != null && intent.getType() != null) {
-            switch (intent.getType()) {
-                case "*/*":
-                    if (intent.getStringArrayExtra(EXTRA_MIME_TYPES) != null) {
-                        mimeTypes = intent.getStringArrayExtra(EXTRA_MIME_TYPES);
+        if (intent != null) {
+            if (intent.getType() != null) {
+                switch (intent.getType()) {
+                    case "*/*":
+                        if (intent.getStringArrayExtra(EXTRA_MIME_TYPES) != null) {
+                            mimeTypes = intent.getStringArrayExtra(EXTRA_MIME_TYPES);
+                        }
                         break;
-                    }
-                default:
-                    mimeTypes = new String[]{intent.getType()};
+                    default:
+                        mimeTypes = new String[]{intent.getType()};
+                }
             }
+
+            isLimitedToStart = intent.getBooleanExtra(EXTRA_LIMIT_ROOT_TO_START, isLimitedToStart);
         }
 
-        currentFragment.registerMimeTypes(mimeTypes);
+        super.onCreate(savedInstanceState);
     }
 
     /**
@@ -66,6 +76,8 @@ public class PickerActivity extends FilePickerActivity {
         currentFragment = new PickerFragment();
         currentFragment.setArgs(path, mode, allowMultiple, allowDirCreate,
                 allowExistingFile, singleClick);
+        currentFragment.registerMimeTypes(mimeTypes);
+        currentFragment.setIsLimited(isLimitedToStart);
         return currentFragment;
     }
 

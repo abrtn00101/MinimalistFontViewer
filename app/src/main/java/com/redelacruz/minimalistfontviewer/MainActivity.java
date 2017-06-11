@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.nononsenseapps.filepicker.Utils;
+import com.redelacruz.minimalistfontviewer.ttfanalyzer.TTFAnalyzer;
 
 import java.util.List;
 
@@ -107,11 +108,13 @@ public class MainActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
     }
 
+    //TODO: Split to allow picking in internal and external SD.
     public void pickFileFolder() {
         Intent i = new Intent(this, PickerActivity.class);
 
         i.putExtra(PickerActivity.EXTRA_ALLOW_MULTIPLE, true);
         i.putExtra(PickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+        i.putExtra(PickerActivity.EXTRA_LIMIT_ROOT_TO_START, true);
         i.putExtra(PickerActivity.EXTRA_MODE, PickerActivity.MODE_FILE_AND_DIR);
         i.putExtra(PickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
 
@@ -135,6 +138,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "URI path: " + path);
                 // File file = Utils.getFileForUri(uri);
                 // Do something with the result...
+
+                //TODO: Needs testing on an API < KitKat device because built-in emulator is broken*
+                // * The built-in emulator has a bug that prevents the SD card from being used, so
+                //   we can't access the test files.
+                Log.d(TAG, "Font name: " + TTFAnalyzer.getFontName(path));
             }
         }
     }
