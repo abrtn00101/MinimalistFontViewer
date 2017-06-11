@@ -4,6 +4,7 @@ An Android viewer for TTF and OTF fonts that lets designers preview fonts with m
 
 Features to be implemented:
 * Load fonts from individual font files, ZIP files or folders
+* Inspect font properties (full name, family, type, author, license, etc.)
 * Group fonts into collections
 * Wrap collections into ZIP files for sharing (via email, Google Drive, etc.)
 * Background and foreground customization
