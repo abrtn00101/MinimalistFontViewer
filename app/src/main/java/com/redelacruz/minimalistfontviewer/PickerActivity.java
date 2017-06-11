@@ -24,7 +24,6 @@ public class PickerActivity extends FilePickerActivity {
      */
     public static final String EXTRA_MIME_TYPES =
             "android.intent.extra" + "ADD_MIME_TYPE";
-    protected String[] mimeTypes;
 
     PickerFragment currentFragment;
 
@@ -33,6 +32,8 @@ public class PickerActivity extends FilePickerActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
+        String[] mimeTypes = {};
+
         if (intent != null && intent.getType() != null) {
             switch (intent.getType()) {
                 case "*/*":

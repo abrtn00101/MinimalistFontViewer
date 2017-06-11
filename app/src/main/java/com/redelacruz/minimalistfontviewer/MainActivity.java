@@ -108,8 +108,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pickFileFolder() {
-        // TODO: Test with different font files.
-
         Intent i = new Intent(this, PickerActivity.class);
 
         i.putExtra(PickerActivity.EXTRA_ALLOW_MULTIPLE, true);
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra(PickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
 
         i.setType("*/*");
-        String[] mimeTypes = {"application/zip", "font/*"};
+        String[] mimeTypes = {"application/zip", "application/font-sfnt", "font/*"};
         i.putExtra(PickerActivity.EXTRA_MIME_TYPES, mimeTypes);
 
         startActivityForResult(i, ZIP_PICK_REQUEST_CODE);

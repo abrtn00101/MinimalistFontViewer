@@ -8,7 +8,9 @@ import com.nononsenseapps.filepicker.FilePickerFragment;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -20,6 +22,20 @@ public class PickerFragment extends FilePickerFragment {
     private static final String TAG = "PickerFragment";
 
     private Set<String> mimeTypes = new HashSet<>();
+    private static final Map<String, String> customTypes = new HashMap<String, String>();
+
+    static {
+        /*
+         * Add custom MIME types to check for here if MimeTypeMap does not return MIME types for a
+         * given extension.
+         */
+        addCustomType("font/collection", "collection");
+        addCustomType("font/otf", "otf");
+        addCustomType("font/ttf", "ttf");
+        addCustomType("font/sfnt", "sfnt");
+        addCustomType("font/woff", "woff");
+        addCustomType("font/woff2", "woff2");
+    }
 
     @Override
     protected boolean isItemVisible(final File file) {
@@ -37,6 +53,16 @@ public class PickerFragment extends FilePickerFragment {
     }
 
     /**
+     * Add a custom MIME type to be checked for.
+     *
+     * @param mimeType  A custom MIME type.
+     * @param extension The extension associated with the MIME type.
+     */
+    private static void addCustomType(String mimeType, String extension){
+        if (!customTypes.containsKey(mimeType)) customTypes.put(extension, mimeType);
+    }
+
+    /**
      * Return the MIME type of a given file based on its file extension.
      *
      * @param file  The file to get MIME type of.
@@ -50,6 +76,7 @@ public class PickerFragment extends FilePickerFragment {
         String extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
         if (extension != null) {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            if (type == null && customTypes.containsKey(extension)) type = customTypes.get(extension);
         }
         return type == null ? "" : type;
     }
